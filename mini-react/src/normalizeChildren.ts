@@ -6,7 +6,6 @@ export function normalizeChildren(children: any[]) {
   // could've used .forEach method of arrays, but raw for loop is better for performance
   for(const child of children) {
     const element = normalizeChild(child);
-    console.log(element);
   
     if (element === null) continue;
   
@@ -45,7 +44,7 @@ function flattenArray(arr: any[]) {
 
     else {
       const normalized = normalizeChild(el);
-      if (normalizeChild !== null) res.push(normalized);
+      if (normalized !== null) res.push(normalized);
     };
   }
 
