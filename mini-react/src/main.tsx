@@ -1,17 +1,18 @@
-import createElement from "./createElement"
+import createElement from "./runtime/createElement";
 import printTree from "./vdom/printTree";
+import Fragment from "./runtime/Fragment";
 
 function fn() {
   console.log("clicked");
 }
 
 const element = (
-  <div>
+  <>
     <p></p>
     <u></u>
     <button onClick={fn}></button>
-  </div>
-)
+  </>
+);
 
 printTree(element, 0);
 console.log(element);

@@ -5,8 +5,9 @@ export type Props = {
 }
 
 export type ElementType = {
-    type: keyof JSX.IntrinsicElements;
+    type: keyof JSX.IntrinsicElements | "TEXT_ELEMENT";
     props: Props & {
-        children: ElementType;
+        children: ElementType[];
+        nodeValue?: string
     }
 }
