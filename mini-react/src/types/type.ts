@@ -4,10 +4,10 @@ export type Props = {
     onClick?: () => void
 }
 
-export type ElementType = {
+export type Vnode = {
     type: keyof JSX.IntrinsicElements | "TEXT_ELEMENT";
     props: Props & {
-        children: ElementType[];
+        children: Vnode[];
         nodeValue?: string
     }
 }

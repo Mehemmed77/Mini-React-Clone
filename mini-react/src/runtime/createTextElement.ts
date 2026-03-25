@@ -1,6 +1,6 @@
-import type { ElementType } from "../types/type";
+import type { Vnode } from "../types/type";
 
-export function createTextElement(text: string | number): ElementType {
+export function createTextElement(text: string | number): Vnode {
   const validatedText = typeof text === "string" ? text : text.toString();
 
   return {
