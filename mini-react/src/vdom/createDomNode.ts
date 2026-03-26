@@ -1,23 +1,29 @@
 import type { Vnode } from "../types/type";
+import AppendChildren from "./appendChildren";
 import setProps from "./setProps";
 
-export default function CreateDomNode(vnode: Vnode): HTMLElement | Text {
-  const elContainer: HTMLElement | Text =
-    vnode.type !== "TEXT_ELEMENT"
-      ? document.createElement(vnode.type as string)
-      : document.createTextNode(vnode.props.nodeValue ?? "");
+export default function CreateDomNode(
+  vnode: Vnode,
+  lastDomNode: HTMLElement,
+): HTMLElement | Text | null {
+  switch (vnode.type) {
+    case "TEXT_ELEMENT": {
+      return document.createTextNode(vnode.props.nodeValue ?? "");
+    }
 
-  const children = [];
+    case "FRAGMENT": {
+      AppendChildren(vnode.props.children, lastDomNode);
 
-  for (const child of vnode.props.children) {
-    children.push(CreateDomNode(child));
+      return null;
+    }
+
+    default: {      
+      const elContainer = document.createElement(vnode.type as string);
+      AppendChildren(vnode.props.children, elContainer);
+
+      setProps(elContainer, vnode.props);
+
+      return elContainer;
+    }
   }
-
-  for (const child of children) {
-    elContainer.appendChild(child);
-  }
-
-  if (elContainer instanceof HTMLElement) setProps(elContainer, vnode.props);
-
-  return elContainer;
 }

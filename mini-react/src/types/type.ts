@@ -5,7 +5,7 @@ export type Props = {
 }
 
 export type Vnode = {
-    type: keyof JSX.IntrinsicElements | "TEXT_ELEMENT";
+    type: keyof JSX.IntrinsicElements | "TEXT_ELEMENT" | "FRAGMENT";
     props: Props & {
         children: Vnode[];
         nodeValue?: string

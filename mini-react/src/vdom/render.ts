@@ -3,13 +3,9 @@ import CreateDomNode from "./createDomNode";
 
 export default function render(vnode: Vnode, container: HTMLElement) {
     container.innerText = "";
-    const domElement = CreateDomNode(vnode);
+    const domElement = CreateDomNode(vnode, container);
 
-    if (domElement instanceof HTMLElement) {
-        container.insertAdjacentElement("beforeend", domElement);
-    }
+    if (domElement === null) return;
 
-    else {
-        container.innerText = domElement.textContent;
-    }
+    container.append(domElement);
 }
