@@ -5,7 +5,7 @@ import setProps from "./setProps";
 export default function CreateDomNode(
   vnode: Vnode,
   lastDomNode: HTMLElement,
-): HTMLElement | Text | null {
+): Node | null {
   switch (vnode.type) {
     case "TEXT_ELEMENT": {
       return document.createTextNode(vnode.props.nodeValue ?? "");
