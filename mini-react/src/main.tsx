@@ -4,27 +4,13 @@ import render from "./vdom/render";
 
 const element = (
   <div>
-    <div>
-      <h1></h1>
-      <p></p>
-    </div>
-    <div>
-      <p></p>
-      <p></p>
-    </div>
   </div>
 );
 
 const element1 = (
   <div>
-    <div>
-      <h4></h4>
-      <h4></h4>
-    </div>
-    <div>
-      <p></p>
-      <p></p>
-    </div>
+    <h1>SALAAM</h1>
+    <h2>KIKIKKI</h2>
   </div>
 );
 
