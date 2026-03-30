@@ -5,7 +5,7 @@ export default function AppendChildren(children: Vnode[], parent: HTMLElement) {
     const domChildren = [];
 
     for(const child of children) {
-        const createdDomNode = CreateDomNode(child, parent);
+        const createdDomNode = CreateDomNode(child);
         if (createdDomNode !== null) domChildren.push(createdDomNode);
     }
 

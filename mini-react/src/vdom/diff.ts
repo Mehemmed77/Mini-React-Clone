@@ -4,46 +4,31 @@ import CreateDomNode from "./createDomNode";
 export default function diff(
   oldVTree: Vnode | null,
   newVTree: Vnode | null,
-  domNode: HTMLElement | null,
-  container: HTMLElement,
+  domTree: HTMLElement | null,
+  parentNode: HTMLElement,
 ) {
-  if (container === null) return;
-
   if (newVTree === null) {
-    domNode?.remove();
+    domTree?.remove();
     return;
   }
 
   if (oldVTree === null) {
-    // CREATE
-    const domElement = CreateDomNode(newVTree, container);
+    const newDomSubTree = CreateDomNode(newVTree);
 
-    if (domElement !== null){
-        container.append(domElement);
-    };
+    // Fragment already appended its children inside CreateDomNode.
+    // Thus, diff does need to do extra work.
 
-    return domNode;
+    if (newDomSubTree !== null) {
+      parentNode.append(newDomSubTree);
+    }
+
+    return;
   }
 
   if (oldVTree.type === newVTree.type) {
-    // UPDATE PROPS AND
-
-    let index = 0;
-    while (oldVTree.props.children.length > index || newVTree.props.children.length > index) {
-        console.log(domNode);
-      diff(
-        oldVTree.props.children.at(index) ?? null,
-        newVTree.props.children.at(index) ?? null,
-        (domNode?.children[index] ?? null) as HTMLElement,
-        domNode as HTMLElement,
-      );
-
-      index++;
-    }
-  } else {
-    // CREATE
-    CreateDomNode(newVTree, container);
   }
-
-  return domNode;
+  
+  else {
+    // replace
+  }
 }
