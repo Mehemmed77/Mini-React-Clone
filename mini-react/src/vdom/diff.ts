@@ -16,6 +16,7 @@ export default function diff(
     const newDomSubTree = CreateDomNode(newVTree);
 
     // Fragment already appended its children inside CreateDomNode.
+    
     // Thus, diff does need to do extra work.
 
     if (newDomSubTree !== null) {
