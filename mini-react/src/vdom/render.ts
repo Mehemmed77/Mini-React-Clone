@@ -11,8 +11,4 @@ export default function render(vnode: Vnode, container: HTMLElement) {
 
     prevDomTree = domElement;
     prevVirtualTree = vnode;
-
-    if (domElement === null) return;
-
-    // container.append(domElement as Node);
 }

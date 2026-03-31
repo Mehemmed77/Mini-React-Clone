@@ -3,8 +3,15 @@ import Fragment from "./runtime/Fragment";
 import render from "./vdom/render";
 
 const element = (
-  <div>
-  </div>
+  <>
+    <>
+      <>
+        <div>
+          <h1>SALAM</h1>
+        </div>
+      </>
+    </>
+  </>
 );
 
 const element1 = (
@@ -16,4 +23,4 @@ const element1 = (
 
 // printTree(element, 0);
 render(element, document.getElementById("root") as HTMLElement);
-render(element1, document.getElementById("root") as HTMLElement);
+// render(element1, document.getElementById("root") as HTMLElement);
