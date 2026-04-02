@@ -1,5 +1,6 @@
 import type { Vnode } from "../types/type";
 import CreateDomNode from "./createDomNode";
+import diffProps from "./diffProps";
 
 export default function diff(
   oldVTree: Vnode | null,
@@ -36,6 +37,9 @@ export default function diff(
     handleTextElements(oldVTree.props.nodeValue ?? "", newVTree.props.nodeValue ?? "", domTree);
     return;
   }
+
+
+  if (domTree) diffProps(oldVTree.props, newVTree.props, domTree as HTMLElement);
 
   const elementDom = newVTree.type === "FRAGMENT" ? parentNode : (domTree as HTMLElement);
   const oldChildren = oldVTree.props.children;

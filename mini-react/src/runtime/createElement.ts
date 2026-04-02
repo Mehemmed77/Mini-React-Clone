@@ -11,8 +11,8 @@ export default function createElement(
   const el = {
     type: type,
     props: {
-      children: normalizedChildren,
       ...props,
+      children: normalizedChildren,
     },
   };
 

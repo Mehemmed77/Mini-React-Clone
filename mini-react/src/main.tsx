@@ -2,26 +2,29 @@ import createElement from "./runtime/createElement";
 import Fragment from "./runtime/Fragment";
 import render from "./vdom/render";
 
+function f() {
+  console.log("1");
+}
+
+function f1() {
+  console.log("2");
+}
+
 const element = (
   <div>
-    <h1>SALAM</h1>
-    <h2>KIKIKKI</h2>
+    <h1 id="id1" className="test">
+      SALAM
+    </h1>
+    <h2 className="c1">KIKIKKI</h2>
+    <button onClick={f} disabled>AAAA</button>
   </div>
 );
 
 const element1 = (
   <div>
-    <h1>SALAAM</h1>
-    <h2>AAAAAAAAA</h2>
-    <>
-      <ul>
-        <li>as</li>
-        <li>ass</li>
-        <li>asss</li>
-        <li>asss</li>
-        <li>assss</li>
-      </ul>
-    </>
+    <h1 id="id2">SALAAM</h1>
+    <h2 className="c1">AAAAAAAAA</h2>
+    <button onClick={f1} disabled={false}>AAAA</button>
   </div>
 );
 
