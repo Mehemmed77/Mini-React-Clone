@@ -14,7 +14,7 @@ export default function diff(
   }
 
   if (oldVTree === null) {
-    console.log(newVTree.type, parentNode);
+    // console.log(newVTree.type, parentNode);
     mountSubtree(newVTree, parentNode);
     return;
   }
@@ -37,7 +37,6 @@ export default function diff(
     handleTextElements(oldVTree.props.nodeValue ?? "", newVTree.props.nodeValue ?? "", domTree);
     return;
   }
-
 
   if (domTree) diffProps(oldVTree.props, newVTree.props, domTree as HTMLElement);
 

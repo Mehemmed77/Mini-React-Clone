@@ -1,5 +1,5 @@
 import type { Vnode } from "../types/type";
-import setProps from "./setProps";
+import updateProp from "./updateProp";
 
 export default function CreateDomNode(
   vnode: Vnode,
@@ -9,7 +9,9 @@ export default function CreateDomNode(
   }
 
   const el = document.createElement(vnode.type as string);
-  setProps(el, vnode.props);
+
+  const props = vnode.props;
+  for(const key in props) key === "children" || updateProp(key, props[key], el, "ADD");
 
   return el;
 }

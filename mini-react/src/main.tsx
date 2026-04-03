@@ -11,23 +11,90 @@ function f1() {
 }
 
 const element = (
-  <div>
-    <h1 id="id1" className="test">
-      SALAM
-    </h1>
-    <h2 className="c1">KIKIKKI</h2>
-    <button onClick={f} disabled>AAAA</button>
+  <div id="root" className="container">
+    <h1 id="title">Hello</h1>
+
+    <ul>
+      <li className="item">A</li>
+      <li className="item">B</li>
+      <li className="item">C</li>
+    </ul>
+
+    <button onClick={f} disabled>
+      Click me
+    </button>
+
+    <p>Paragraph</p>
+
+    <div id="root-new" className="container-new">
+      {/* same node type, props change */}
+
+      <h1 id="title">Hello World</h1>
+      {/* same node → text change */}
+
+      <ul>
+        <li className="item">A</li>
+        <li className="item-new">B updated</li>
+        <li className="item">D</li>
+      </ul>
+      {/* same structure, internal changes */}
+
+      <button onClick={f1} disabled={false}>
+        Click me
+      </button>
+      {/* event + boolean change */}
+
+      <section>New Node</section>
+      {/* p → section (NODE TYPE CHANGE!) */}
+    </div>
   </div>
 );
 
 const element1 = (
-  <div>
-    <h1 id="id2">SALAAM</h1>
-    <h2 className="c1">AAAAAAAAA</h2>
-    <button onClick={f1} disabled={false}>AAAA</button>
+  <div id="root-new" className="container-new">
+    {/* same node type, props change */}
+
+    <h1 id="title">Hello World</h1>
+    {/* same node → text change */}
+
+    <ul>
+      <li className="item">A</li>
+      <li className="item-new">B updated</li>
+      <li className="item">D</li>
+    </ul>
+    {/* same structure, internal changes */}
+
+    <button onClick={f1} disabled={false}>
+      Click me
+    </button>
+    {/* event + boolean change */}
+
+    <section>New Node</section>
+    {/* p → section (NODE TYPE CHANGE!) */}
+
+    <div id="root-new" className="container-new">
+      {/* same node type, props change */}
+
+      <h1 id="title">Hello World</h1>
+      {/* same node → text change */}
+
+      <ul>
+        <li className="item">A</li>
+        <li className="item-new">B updated</li>
+        <li className="item">D</li>
+      </ul>
+      {/* same structure, internal changes */}
+
+      <button onClick={f} disabled={false}>
+        Click me
+      </button>
+      {/* event + boolean change */}
+
+      <section>New Node</section>
+      {/* p → section (NODE TYPE CHANGE!) */}
+    </div>
   </div>
 );
 
-// printTree(element, 0);
 render(element, document.getElementById("root") as HTMLElement);
 render(element1, document.getElementById("root") as HTMLElement);

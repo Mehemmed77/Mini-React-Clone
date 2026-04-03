@@ -1,4 +1,5 @@
 import type { Props } from "../types/type";
+import updateProp from "./updateProp";
 
 export default function diffProps(oldProps: Props, newProps: Props, domElement: HTMLElement) {
   for (const key in oldProps) {
@@ -7,10 +8,10 @@ export default function diffProps(oldProps: Props, newProps: Props, domElement: 
     const oldVal = oldProps[key];
     const newVal = newProps[key];
 
-    if (newVal == null) removeExistingProp(key, oldVal, domElement);
+    if (newVal == null) updateProp(key, oldVal, domElement, "DELETE");
     else if (newVal !== oldVal) {
-      removeExistingProp(key, oldVal, domElement);
-      addNewProp(key, newVal, domElement);
+      updateProp(key, oldVal, domElement, "DELETE");
+      updateProp(key, newVal, domElement, "ADD");
     }
   }
 
@@ -20,20 +21,6 @@ export default function diffProps(oldProps: Props, newProps: Props, domElement: 
     const oldVal = oldProps[key];
     const newVal = newProps[key];
 
-    console.log(key, newVal);
-
-    if (oldVal == null) addNewProp(key, newVal, domElement);
+    if (oldVal == null) updateProp(key, newVal, domElement, "ADD");
   }
-}
-
-function addNewProp(key: string, val: any, domElement: HTMLElement) {
-  if (key.startsWith("on")) domElement.addEventListener(key.slice(2).toLowerCase(), val);
-  else if (typeof val === "boolean") (domElement as any)[key] = val;
-  else domElement.setAttribute(key, val);
-}
-
-function removeExistingProp(key: string, val: any, domElement: HTMLElement) {
-  if (key.startsWith("on")) domElement.removeEventListener(key.slice(2).toLowerCase(), val);
-  else if (typeof val === "boolean") (domElement as any)[key] = false;
-  else domElement.removeAttribute(key);
 }
