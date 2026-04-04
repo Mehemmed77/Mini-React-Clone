@@ -1,15 +1,10 @@
 import type { Vnode } from "../types/type";
-import diff from "./diff";
+import diff from "./diff/diff";
 
 let prevVirtualTree: any = null;
 
 export default function render(vnode: Vnode, container: HTMLElement) {
-  diff(
-    prevVirtualTree,
-    vnode,
-    container.firstChild as Node | null,
-    container
-  );
+  diff(prevVirtualTree, vnode, container.firstChild as Node | null, container);
 
   prevVirtualTree = vnode;
 }
