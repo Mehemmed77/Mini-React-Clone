@@ -9,4 +9,10 @@ export type Vnode = {
     props: Props
 }
 
+export type KeyedChild = {
+  vnode: Vnode;
+  dom: Node;
+  index: number;
+};
+
 export type PatchType = "CREATE" | "REMOVE" | "UPDATE" | "REPLACE";

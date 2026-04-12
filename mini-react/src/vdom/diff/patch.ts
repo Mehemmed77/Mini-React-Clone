@@ -8,23 +8,26 @@ export default function patch(
   newVDom: Vnode | null,
   el: Node | null,
   parent: HTMLElement,
-  type: PatchType,
 ) {
+  const type: PatchType = resolvePatchType(oldVDom, newVDom);
+
   switch (type) {
     case "REMOVE": {
       (el as HTMLElement)?.remove();
-      break;
+      return [];
     }
 
     case "CREATE": {
-      mountSubtree(newVDom as Vnode, parent);
-      break;
+      const nodes = mountSubtree(newVDom as Vnode, parent, false) as Node[];
+      parent.append(...nodes);
+
+      return nodes;
     }
 
     case "REPLACE": {
       if (newVDom === null) break;
 
-      const mountedNodes = mountSubtree(newVDom, parent);
+      const mountedNodes = mountSubtree(newVDom, parent, false);
 
       if (el !== null && mountedNodes.length > 0) {
         parent.replaceChild(mountedNodes[0], el);
@@ -34,7 +37,7 @@ export default function patch(
         }
       }
 
-      break;
+      return mountedNodes;
     }
 
     case "UPDATE": {
@@ -42,9 +45,16 @@ export default function patch(
 
       if (newVDom.type === "TEXT_ELEMENT") {
         updateText(oldVDom.props.nodeValue ?? "", newVDom.props.nodeValue ?? "", el);
-      }
+      } else diffProps(oldVDom.props, newVDom.props, el as HTMLElement);
 
-      else diffProps(oldVDom.props, newVDom.props, el as HTMLElement);
+      return [el];
     }
   }
+}
+
+function resolvePatchType(oldVDom: Vnode | null, newVDom: Vnode | null): PatchType {
+  if (newVDom === null) return "REMOVE";
+  if (oldVDom === null) return "CREATE";
+  if (oldVDom.type !== newVDom.type) return "REPLACE";
+  return "UPDATE";
 }

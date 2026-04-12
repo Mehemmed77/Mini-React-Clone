@@ -1,10 +1,5 @@
-import type { Vnode } from "@/types/type";
+import type { KeyedChild, Vnode } from "@/types/type";
 import patch from "./patch";
-
-type Sample = {
-  child: Vnode;
-  key: string;
-};
 
 export default function diff(
   oldVDom: Vnode | null,
@@ -12,36 +7,25 @@ export default function diff(
   el: Node | null,
   parent: HTMLElement,
 ) {
-  if (newVDom === null) {
-    patch(oldVDom, newVDom, el, parent, "REMOVE");
-    return;
-  }
+  patch(oldVDom, newVDom, el, parent);
 
-  if (oldVDom === null) {
-    patch(oldVDom, newVDom, el, parent, "CREATE");
-    return;
-  }
+  if (!(oldVDom !== null && newVDom !== null && oldVDom.type === newVDom.type)) return;
 
-  if (oldVDom.type !== newVDom.type) {
-    patch(oldVDom, newVDom, el, parent, "REPLACE");
-    return;
-  }
+  // do key-based diffing
 
-  patch(oldVDom, newVDom, el, parent, "UPDATE");
-
-  const elementDom = newVDom.type === "FRAGMENT" ? parent : (el as HTMLElement);
+  const newParent = newVDom.type === "FRAGMENT" ? parent : (el as HTMLElement);
 
   const oldChildren = oldVDom.props.children;
   const newChildren = newVDom.props.children;
 
-  const oldKeyMap: Map<string, Sample> = new Map();
+  const oldKeyMap: Map<string, KeyedChild> = new Map();
 
   oldChildren.forEach((v, i) => {
     const key = v.props.key ?? i;
-    oldKeyMap.set(key, { child: v, key: i.toString() });
+    oldKeyMap.set(key, { vnode: v, index: i, dom: newParent.childNodes[i] });
   });
 
-  const newDomNodes: (ChildNode | null)[] = [];
+  const domNodes: (Node | null)[] = [];
 
   newChildren.forEach((v, i) => {
     const key = v.props.key ?? i;
@@ -49,30 +33,31 @@ export default function diff(
     const match = oldKeyMap.get(key);
 
     if (match) {
-      const { child: oldChild } = match;
+      const { vnode, index } = match;
 
-      const oldChildDom = elementDom.childNodes[i] ?? null;
+      const oldChildDom = newParent.childNodes[index] ?? null;
 
-      diff(oldChild, v, oldChildDom, parent);
-      
-      newDomNodes.push(oldChildDom);
+      const nodes = patch(vnode, v, oldChildDom, newParent);
+
+      domNodes.push(...nodes as Node[]);
 
       oldKeyMap.delete(key);
     }
 
     else {
-      
+      const nodes = patch(null, v, null, newParent);
+    
+      domNodes.push(...nodes as Node[]);
     }
   });
 
-  let index = 0;
-  while (index < oldChildren.length || index < newChildren.length) {
-    diff(
-      oldChildren.at(index) ?? null,
-      newChildren.at(index) ?? null,
-      elementDom.childNodes[index] ?? null,
-      elementDom,
-    );
-    index++;
-  }
+  oldKeyMap.forEach((v) => newParent.removeChild(newParent.childNodes[v.index]));
+
+  domNodes.forEach((node, i) => {
+    const current = newParent.childNodes[i];
+
+    if (current !== node) {
+      newParent.insertBefore(node as Node, current);
+    }
+  });
 }
