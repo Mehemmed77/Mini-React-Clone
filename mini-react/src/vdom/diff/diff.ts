@@ -7,9 +7,9 @@ export default function diff(
   el: Node | null,
   parent: HTMLElement,
 ) {
-  patch(oldVDom, newVDom, el, parent);
+  const nodes = patch(oldVDom, newVDom, el, parent);
 
-  if (!(oldVDom !== null && newVDom !== null && oldVDom.type === newVDom.type)) return;
+  if (!(oldVDom !== null && newVDom !== null && oldVDom.type === newVDom.type)) return nodes;
 
   // do key-based diffing
 
@@ -21,6 +21,7 @@ export default function diff(
   const oldKeyMap: Map<string, KeyedChild> = new Map();
 
   oldChildren.forEach((v, i) => {
+    if (v.type === "TEXT_ELEMENT") return;
     const key = v.props.key ?? i;
     oldKeyMap.set(key, { vnode: v, index: i, dom: newParent.childNodes[i] });
   });
@@ -37,8 +38,8 @@ export default function diff(
 
       const oldChildDom = newParent.childNodes[index] ?? null;
 
-      const nodes = patch(vnode, v, oldChildDom, newParent);
-
+      const nodes = diff(vnode, v, oldChildDom, newParent);
+      
       domNodes.push(...nodes as Node[]);
 
       oldKeyMap.delete(key);
@@ -51,7 +52,9 @@ export default function diff(
     }
   });
 
-  oldKeyMap.forEach((v) => newParent.removeChild(newParent.childNodes[v.index]));
+  oldKeyMap.forEach((v) => {
+    (v.dom as HTMLElement).remove();
+  });
 
   domNodes.forEach((node, i) => {
     const current = newParent.childNodes[i];
@@ -60,4 +63,6 @@ export default function diff(
       newParent.insertBefore(node as Node, current);
     }
   });
+
+  return nodes;
 }

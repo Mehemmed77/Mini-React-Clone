@@ -19,7 +19,9 @@ export default function mountSubtree(vTree: Vnode, parentNode: HTMLElement, appe
     for (const child of vTree.props.children) mountSubtree(child, el, true);
   }
 
-  if (append) parentNode.append(domNode);
+  if (append) {
+    parentNode.append(domNode);
+  };
 
   return [domNode];
 }

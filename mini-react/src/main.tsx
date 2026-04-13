@@ -4,17 +4,20 @@ import render from "./vdom/render";
 
 const element = (
   <div>
-    <h1>Salam</h1>
+    <h1 key="main">Salam</h1>
+    <p key="p">Test</p>
+    <h5 key="AA">Yes</h5>
   </div>
 );
 
 const element1 = (
   <div>
     <>
-      <h1>Salam evvel</h1>
-      <h2>Salam evvel 2</h2>
+      <h2 key="b">New 1</h2>
+      <h3 key="c">New 2</h3>
     </>
-    <h1>Salam</h1>
+    <h1 key="main">Salam</h1>
+    <p key="p">Test updated</p>
   </div>
 );
 

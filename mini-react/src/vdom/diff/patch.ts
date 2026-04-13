@@ -25,9 +25,14 @@ export default function patch(
     }
 
     case "REPLACE": {
+      // console.log(oldVDom, newVDom, el, parent);
       if (newVDom === null) break;
 
+      console.log(parent, parent.children);
+
       const mountedNodes = mountSubtree(newVDom, parent, false);
+
+      console.log(parent, parent.children);
 
       if (el !== null && mountedNodes.length > 0) {
         parent.replaceChild(mountedNodes[0], el);
