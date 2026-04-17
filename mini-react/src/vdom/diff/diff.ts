@@ -21,7 +21,6 @@ export default function diff(
   const oldKeyMap: Map<string, KeyedChild> = new Map();
 
   oldChildren.forEach((v, i) => {
-    if (v.type === "TEXT_ELEMENT") return;
     const key = v.props.key ?? i;
     oldKeyMap.set(key, { vnode: v, index: i, dom: newParent.childNodes[i] });
   });
@@ -38,6 +37,7 @@ export default function diff(
 
       const oldChildDom = newParent.childNodes[index] ?? null;
 
+      console.log(vnode.props, v.props);
       const nodes = diff(vnode, v, oldChildDom, newParent);
       
       domNodes.push(...nodes as Node[]);
@@ -50,7 +50,7 @@ export default function diff(
     
       domNodes.push(...nodes as Node[]);
     }
-  });
+  })
 
   oldKeyMap.forEach((v) => {
     (v.dom as HTMLElement).remove();

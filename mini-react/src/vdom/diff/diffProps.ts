@@ -1,5 +1,5 @@
 import type { Props } from "@/types/type";
-import updateProp from "../updateProp";
+import updateProp from "./updateProp";
 
 export default function diffProps(oldProps: Props, newProps: Props, domElement: HTMLElement) {
   for (const key in oldProps) {

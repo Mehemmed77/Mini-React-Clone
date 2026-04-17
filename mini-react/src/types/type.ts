@@ -5,7 +5,7 @@ export type Props = {
 }
 
 export type Vnode = {
-    type: keyof JSX.IntrinsicElements | "TEXT_ELEMENT" | "FRAGMENT";
+    type: keyof JSX.IntrinsicElements | "TEXT_ELEMENT" | "FRAGMENT" | ((props?: Props) => Vnode | null);
     props: Props
 }
 

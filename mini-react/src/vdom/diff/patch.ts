@@ -2,6 +2,7 @@ import type { PatchType, Vnode } from "@/types/type";
 import diffProps from "./diffProps";
 import mountSubtree from "./mountSubtree";
 import updateText from "./updateText";
+import detectPropChange from "./detectPropChange";
 
 export default function patch(
   oldVDom: Vnode | null,
@@ -25,32 +26,34 @@ export default function patch(
     }
 
     case "REPLACE": {
-      // console.log(oldVDom, newVDom, el, parent);
       if (newVDom === null) break;
-
-      console.log(parent, parent.children);
-
+      
       const mountedNodes = mountSubtree(newVDom, parent, false);
-
-      console.log(parent, parent.children);
-
+      
       if (el !== null && mountedNodes.length > 0) {
         parent.replaceChild(mountedNodes[0], el);
-
+        
         for (let i = 1; i < mountedNodes.length; i++) {
           parent.insertBefore(mountedNodes[i], mountedNodes[i - 1].nextSibling);
         }
       }
-
+      
       return mountedNodes;
     }
-
+    
     case "UPDATE": {
+      console.log(oldVDom, newVDom);
       if (newVDom === null || oldVDom === null || el === null) break;
 
       if (newVDom.type === "TEXT_ELEMENT") {
         updateText(oldVDom.props.nodeValue ?? "", newVDom.props.nodeValue ?? "", el);
-      } else diffProps(oldVDom.props, newVDom.props, el as HTMLElement);
+      }
+
+      else if (typeof oldVDom.type === "function" && typeof newVDom.type === "function") {
+        if (detectPropChange(oldVDom, newVDom)) return patch(null, newVDom.type(newVDom.props), el, parent);
+      }
+
+      else diffProps(oldVDom.props, newVDom.props, el as HTMLElement);
 
       return [el];
     }

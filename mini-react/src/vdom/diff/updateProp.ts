@@ -15,7 +15,6 @@ export default function updateProp(
     }
 
     case "boolean": {
-      console.log(name);
       (domElement as any)[name] = action === "ADD" ? !!val : false;
 
       if (action === "ADD" && val) {
@@ -28,6 +27,7 @@ export default function updateProp(
     }
 
     case "attribute": {
+      console.log(domElement)
       if (action === "ADD") domElement.setAttribute(name, val);
       else domElement.removeAttribute(name);
 
