@@ -27,7 +27,6 @@ export default function updateProp(
     }
 
     case "attribute": {
-      console.log(domElement)
       if (action === "ADD") domElement.setAttribute(name, val);
       else domElement.removeAttribute(name);
 

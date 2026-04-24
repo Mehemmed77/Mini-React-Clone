@@ -2,33 +2,33 @@ import type { Vnode } from "@/types/type";
 import CreateDomNode from "../createDomNode";
 
 export default function mountSubtree(
-  vTree: Vnode,
-  parentNode: HTMLElement,
+  vDom: Vnode,
+  parent: HTMLElement,
   append: boolean,
 ): Node[] {
-  if (typeof vTree.type === "function") vTree = vTree.type(vTree.props) as Vnode;
+  if (typeof vDom.type === "function") vDom = vDom.type(vDom.props) as Vnode;
 
-  if (vTree.type === "FRAGMENT") {
+  if (vDom.type === "FRAGMENT") {
     const mounted: Node[] = [];
 
-    for (const child of vTree.props.children) {
-      mounted.push(...mountSubtree(child, parentNode, false));
+    for (const child of vDom.props.children) {
+      mounted.push(...mountSubtree(child, parent, false));
     }
 
     return mounted;
   }
 
-  const domNode = CreateDomNode(vTree);
+  const domNode = CreateDomNode(vDom);
 
-  if (vTree.type !== "TEXT_ELEMENT") {
+  if (vDom.type !== "TEXT_ELEMENT") {
     const el = domNode as HTMLElement;
-    for (const child of vTree.props.children) {
+    for (const child of vDom.props.children) {
       mountSubtree(child, el, true);
     }
   }
 
   if (append) {
-    parentNode.append(domNode);
+    parent.append(domNode);
   }
 
   return [domNode];

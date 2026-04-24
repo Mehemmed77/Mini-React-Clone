@@ -1,5 +1,6 @@
-import type { KeyedChild, Vnode } from "@/types/type";
+import type { Vnode } from "@/types/type";
 import patch from "./patch";
+import GetKeys from "./getKeys";
 
 export default function diff(
   oldVDom: Vnode | null,
@@ -9,54 +10,48 @@ export default function diff(
 ) {
   const nodes = patch(oldVDom, newVDom, el, parent);
 
+  // If the types are different return the mounted nodes;
   if (!(oldVDom !== null && newVDom !== null && oldVDom.type === newVDom.type)) return nodes;
 
   // do key-based diffing
 
+  // Define new parent element since key-based diffing is done with the element's children
   const newParent = newVDom.type === "FRAGMENT" ? parent : (el as HTMLElement);
 
-  const oldChildren = oldVDom.props.children;
-  const newChildren = newVDom.props.children;
+  const oldVChildren = oldVDom.props.children;
+  const newVChildren = newVDom.props.children;
 
-  const oldKeyMap: Map<string, KeyedChild> = new Map();
+  const oldKeys = GetKeys(oldVChildren, newParent);
 
-  oldChildren.forEach((v, i) => {
-    const key = v.props.key ?? i;
-    oldKeyMap.set(key, { vnode: v, index: i, dom: newParent.childNodes[i] });
-  });
+  const patchedNodes: (Node | null)[] = [];
 
-  const domNodes: (Node | null)[] = [];
+  newVChildren.forEach((newVNode, i) => {
+    const key = newVNode.props.key ?? i;
 
-  newChildren.forEach((v, i) => {
-    const key = v.props.key ?? i;
+    const match = oldKeys.get(key);
 
-    const match = oldKeyMap.get(key);
+    let nodes: Node[] | undefined;
 
     if (match) {
-      const { vnode, index } = match;
+      const { vnode: oldVNode, index } = match;
 
-      const oldChildDom = newParent.childNodes[index] ?? null;
+      const currentChildNode = newParent.childNodes[index] ?? null;
 
-      console.log(vnode.props, v.props);
-      const nodes = diff(vnode, v, oldChildDom, newParent);
+      nodes = diff(oldVNode, newVNode, currentChildNode, newParent);
       
-      domNodes.push(...nodes as Node[]);
-
-      oldKeyMap.delete(key);
+      oldKeys.delete(key);
     }
-
-    else {
-      const nodes = patch(null, v, null, newParent);
     
-      domNodes.push(...nodes as Node[]);
-    }
+    else nodes = patch(null, newVNode, null, newParent);
+
+    patchedNodes.push(...nodes as Node[]); 
   })
 
-  oldKeyMap.forEach((v) => {
-    (v.dom as HTMLElement).remove();
+  oldKeys.forEach(v => {
+    if(v.dom) (v.dom as HTMLElement).remove();
   });
 
-  domNodes.forEach((node, i) => {
+  patchedNodes.forEach((node, i) => {
     const current = newParent.childNodes[i];
 
     if (current !== node) {
